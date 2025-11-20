@@ -3,33 +3,49 @@ name: A Basic Workflow
 
 # actions qui déclenchent le workflow
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+  push:
+    branches: ["main"]
 
-    # permet d'exécuter manuellement le workflow depuis l'interface GitHub
-    workflow_dispatch:
-    schedule:
+  pull_request:
+    branches: ["main"]
+
+  # permet d'exécuter manuellement le workflow depuis l'interface GitHub
+  workflow_dispatch:
 
 # jobs définit les tâches à exécuter
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  # ce workflow a un seul job appelé "build-app"
+  build-app:
+    # le type de machine virtuelle à utiliser
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v3
+    # les étapes représentent les actions à exécuter dans le job
+    steps:
+      # vérifier le code source du dépôt
+      - uses: actions/checkout@v3
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: "16"
+      # lancer une commande simple
+      - name: run on-line nodejs script
+        run: echo hello world !
 
-            - name: Install dependencies
-              run: npm install
+      # lancer une commande utilisant le shell
+      - name: run a multi-line script
+        run: |
+          echo add other actions build,
+          echo test, and deploy your ptoject
 
-            - name: Run tests
-              run: npm test
+  build-api:
+    runs-on: windows-latest
+    steps:
+      - run: echo "Building API"
+
+  build-db:
+    needs: build-app
+    runs-on: windows-latest
+    steps:
+      - run: echo "Hello windows"
+  package:
+    needs: [build-app, build-db]
+    runs-on: macos-latest
+    steps:
+      - run: echo "Hello Macos"
