@@ -19,8 +19,8 @@ jobs:
     steps:
       - name: Print Environment Variables
         run: |
-          echo "DAY_OF_WEEK is $DAY_OF_WEEK"
-          echo "testvar is $testvar
+          echo "$Greeting $First_Name. Today is $DAY_OF_WEEK"
+          echo "testvar is $testvar"
           echo "testvar ${{env.testvar}}"
         env:
           First_Name: "Student"
